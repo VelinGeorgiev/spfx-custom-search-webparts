@@ -7,18 +7,16 @@ import SearchService from '../../services/SearchService';
 
 export const DefaultSearchResultsComponent = () => {
   const [searchResults, setSearchResults] = React.useState([]);
-  const { searchReducer } = React.useContext(SearchContext) as any;
+  const { searchReducer } = React.useContext(SearchContext);
 
   React.useEffect(() => {
     (async () => {
       // query change triggered by the reducer
       // reload the data
-
-      const { searchQueryParams } = searchReducer;
       const searchService = SearchService();
 
-      const result = await searchService.get(searchQueryParams);
-      
+      const result = await searchService.get(searchReducer);
+
       setSearchResults(result);
     }
     )();
@@ -28,16 +26,22 @@ export const DefaultSearchResultsComponent = () => {
     <div>
       <h2>Debug Data:</h2>
 
-      <div style={{ background: '#ccc' }} >
-        Reducer Data:
-        <pre>{JSON.stringify(searchReducer, null, 2)}</pre>
+      {searchReducer &&
+        <code>
+          <pre>
+            {JSON.stringify(searchReducer, null, 2)}
+
+          </pre>
+        </code>}
+      <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
+        KQL Query: <br />{searchReducer.kqlText}
       </div>
 
 
       <h2>Search Results:</h2>
 
-      <DetailsList 
-        items={searchResults} 
+      <DetailsList
+        items={searchResults}
         columns={
           [
             {
@@ -45,7 +49,7 @@ export const DefaultSearchResultsComponent = () => {
               name: 'Title',
               fieldName: 'Title',
               minWidth: 160,
-              maxWidth: 220,
+              maxWidth: 160,
               isResizable: true
             },
             {
@@ -56,23 +60,31 @@ export const DefaultSearchResultsComponent = () => {
               isResizable: true
             },
             {
-              key: 'column2',
+              key: 'column4',
+              name: 'FileExtension',
+              fieldName: 'FileExtension',
+              minWidth: 160,
+              isResizable: true
+
+            },
+            {
+              key: 'column5',
               name: 'Author',
-              fieldName: 'Title',
+              fieldName: 'Author',
               minWidth: 160,
               isResizable: true
             },
             {
-              key: 'column4',
+              key: 'column6',
               name: 'Path',
               fieldName: 'Path',
               minWidth: 160,
               isResizable: true
             }
           ]
-        } 
-        selectionMode={SelectionMode.none} 
-        layoutMode={DetailsListLayoutMode.justified} 
+        }
+        selectionMode={SelectionMode.none}
+        layoutMode={DetailsListLayoutMode.justified}
       />
     </div>
   );

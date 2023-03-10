@@ -1,7 +1,7 @@
 const SearchService = () => {
 
-    const getSharePointDigest = async () => {
-        const url = '/_api/contextinfo';
+    const getSharePointDigest = async (serverRelativeUrl: string) => {
+        const url = `${serverRelativeUrl}/_api/contextinfo`;
         const options = {
             method: 'POST',
             headers: {
@@ -19,12 +19,12 @@ const SearchService = () => {
         }
     }
 
-    const get = async (searchQueryParams: any) => {
+    const get = async (searchReducer: any) => {
 
-        const { keywords } = searchQueryParams;
+        const { kqlText, serverRelativeUrl } = searchReducer;
 
-        const url = `/_api/search/postquery`;
-        const digest = await getSharePointDigest();
+        const url = `${serverRelativeUrl}/_api/search/postquery`;
+        const digest = await getSharePointDigest(serverRelativeUrl);
 
         const options = {
             method: 'POST',
@@ -35,13 +35,14 @@ const SearchService = () => {
             },
             body: JSON.stringify({
                 "request": {
-                    'Querytext': keywords,
-                    'RowLimit': 50,
+                    'Querytext': kqlText,
+                    'RowLimit': 30,
                     'SelectProperties': {
                         'results': [
                             'Title',
                             'Path',
-                            'Author'
+                            'Author',
+                            'FileExtension'
                         ]
                     }
                 }

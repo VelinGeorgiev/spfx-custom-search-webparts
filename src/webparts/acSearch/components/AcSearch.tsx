@@ -6,12 +6,23 @@ import { SearchReducer } from '../hooks/SearchReducer';
 import { SearchBoxComponent } from './searchBoxComponents/SearchBoxComponent';
 import { DefaultSearchResultsComponent } from './searchResultComponents/DefaultSearchResultsComponent';
 
-import { Toggle } from '@fluentui/react/lib/Toggle';
 import AcSearchAdvancedOptions from './AcSearcAdvancedOptons';
+import { BaseComponentContext } from '@microsoft/sp-component-base';
 
-const AcSearch = () => {
-  const [openAdvanced, setOpenAdvanced] = React.useState(false)
-  const [searchReducer, dispatchSearchReducer] = React.useReducer(SearchReducer, {});
+export interface IAcSearchProps {
+  description: string;
+  isDarkTheme: boolean;
+  environmentMessage: string;
+  hasTeamsContext: boolean;
+  context: BaseComponentContext;
+}
+
+const AcSearch = ({ context }: IAcSearchProps) => {
+  const [searchReducer, dispatchSearchReducer] = React.useReducer(SearchReducer, { 
+    serverRelativeUrl: context.pageContext.web.serverRelativeUrl,
+    absoluteUrl: context.pageContext.web.absoluteUrl,
+    user: context.pageContext.user
+  });
 
   return (
     <div>
@@ -19,13 +30,7 @@ const AcSearch = () => {
 
         <SearchBoxComponent />
 
-        <Toggle
-          label="Advanced Options"
-          inlineLabel
-          checked={openAdvanced}
-          onChange={e => setOpenAdvanced(!openAdvanced)}
-        />
-        {openAdvanced && <AcSearchAdvancedOptions />}
+        <AcSearchAdvancedOptions context={context} />
 
         <DefaultSearchResultsComponent />
 

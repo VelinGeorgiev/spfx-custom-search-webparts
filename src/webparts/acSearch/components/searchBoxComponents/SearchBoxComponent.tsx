@@ -6,27 +6,30 @@ import { SearchBox } from '@fluentui/react/lib/SearchBox';
 import { SearchContext } from '../../hooks/SearchContext';
 
 export const SearchBoxComponent = () => {
+    const { searchReducer } = React.useContext(SearchContext);
     const [keywords, setKeywords] = React.useState(null);
     const { dispatchSearchReducer } = React.useContext(SearchContext) as any; //searchReducer
 
-    // React.useEffect(() => {
-    
-    // }, [searchReducer])
+    React.useEffect(() => {
+
+        if (searchReducer.lastActionType == 'load' && searchReducer.keywords !== '*') {
+            setKeywords(searchReducer.keywords);
+        }
+    }, [searchReducer])
 
     const updateKeywords = () => {
-        dispatchSearchReducer({type: 'setKeywords', payload: { value: keywords }})
+        dispatchSearchReducer({ type: 'setKeywords', payload: { value: keywords } })
     }
 
     return (
         <Stack horizontal>
-
-            <SearchBox 
-                placeholder="Search" 
-                onSearch={updateKeywords} 
-                onChange={(e, value) => setKeywords(value) } 
+            <SearchBox
+                placeholder="Search"
+                onSearch={updateKeywords}
+                onChange={(e, value) => setKeywords(value)}
                 value={keywords || ''}
+                defaultValue={keywords}
             />
-
             <PrimaryButton text="Search" onClick={updateKeywords} />
         </Stack>
     );
