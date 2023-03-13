@@ -19,7 +19,24 @@ const options: IDropdownOption[] = [
 
 const FileTypeFilter = () => {
   const [selectedOptions, setSelectedOptions] = React.useState([]);
-  const { dispatchSearchReducer } = React.useContext(SearchContext);
+  const { searchReducer, dispatchSearchReducer } = React.useContext(SearchContext);
+
+  React.useEffect(() => {
+
+    if (searchReducer.lastActionType == 'load' &&
+      searchReducer.filters &&
+      searchReducer.filters.fileTypeFilter &&
+      searchReducer.filters.fileTypeFilter.jsonValues
+    ) {
+
+      setSelectedOptions(searchReducer.filters.fileTypeFilter.jsonValues);
+
+    } else if (searchReducer.lastActionType == 'load') {
+
+      setSelectedOptions([]);
+    }
+
+  }, [searchReducer])
 
   const updateKqlQuery = (_: any, option: IDropdownOption) => {
 
@@ -46,6 +63,7 @@ const FileTypeFilter = () => {
       label="File Type"
       multiSelect
       options={options}
+      selectedKeys={selectedOptions}
       styles={dropdownStyles}
       onChange={updateKqlQuery}
     />

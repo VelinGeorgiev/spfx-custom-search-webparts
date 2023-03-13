@@ -15,7 +15,7 @@ export interface IAcSearchAdvancedOptions {
 }
 
 const AcSearcAdvancedOptons = ({ context }: IAcSearchAdvancedOptions) => {
-  const [openAdvanced, setOpenAdvanced] = React.useState(true)
+  const [openAdvanced, setOpenAdvanced] = React.useState(false);
 
   return (
     <>

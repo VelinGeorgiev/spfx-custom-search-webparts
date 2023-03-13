@@ -6,9 +6,8 @@ import { SearchBox } from '@fluentui/react/lib/SearchBox';
 import { SearchContext } from '../../hooks/SearchContext';
 
 export const SearchBoxComponent = () => {
-    const { searchReducer } = React.useContext(SearchContext);
+    const { searchReducer, dispatchSearchReducer } = React.useContext(SearchContext);
     const [keywords, setKeywords] = React.useState(null);
-    const { dispatchSearchReducer } = React.useContext(SearchContext) as any; //searchReducer
 
     React.useEffect(() => {
 
